@@ -3,12 +3,13 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const { validationResult } = require('express-validator');
 const { registerValidation } = require('./validations/auth.js');
-const User = require('./models/user.js'); 
+const bcrypt = require('bcrypt');
+const User = require('./models/user.js');
 
 const password = encodeURIComponent('12345');
 const dbURI = `mongodb+srv://voin12k:${password}@cluster0.kbdn813.mongodb.net/mydatabase?retryWrites=true&w=majority&appName=Cluster0`;
 
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(dbURI)
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
@@ -20,39 +21,56 @@ app.get('/', (req, res) => {
   res.send('Hello world');
 });
 
-app.post('/auth/login', (req, res) => {
-  console.log(req.body);
+app.post('/auth/login', async (req, res) => {
+  const { email, password } = req.body;
 
-  const token = jwt.sign(
-    {
-      email: req.body.email,
-      fullName: "vlad",
-    },
-    'secret123',
-  );
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: 'Authentication failed. User not found.' });
+    }
 
-  res.json({
-    success: true,
-    token,
-  });
+    const isMatch = await bcrypt.compare(password, user.passwordHash);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Authentication failed. Wrong password.' });
+    }
+
+    const token = jwt.sign(
+      { email: user.email, fullName: user.fullName },
+      'secret123',
+      { expiresIn: '1h' }
+    );
+
+    res.json({ success: true, token });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err });
+  }
 });
 
-app.post('/auth/register', registerValidation, (req, res) => {
+app.post('/auth/register', registerValidation, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json(errors.array());
   }
 
-  // const user = new User({
-  //   email: req.body.email,
-  //   fullName: req.body.fullName,
-  //   password: req.body.password
-  // });
-  // user.save();
+  const { email, fullName, password, avatarUrl } = req.body;
 
-  res.json({
-    success: true,
-  });
+  try {
+    const hash = await bcrypt.hash(password, 10);
+
+    const newUser = new User({
+      email,
+      fullName,
+      avatarUrl,
+      passwordHash: hash,
+    });
+
+    const savedUser = await newUser.save();
+
+    res.status(201).json({ success: true, user: savedUser });
+  } catch (err) {
+    res.status(500).json({ message: 'Error saving user', error: err });
+  }
 });
 
 const PORT = process.env.PORT || 4444;
