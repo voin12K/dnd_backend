@@ -43,8 +43,6 @@ app.post('/auth/register', registerValidation, (req, res) => {
     return res.status(400).json(errors.array());
   }
 
-  // Ваша логика для регистрации пользователя в базе данных
-  // Пример:
   // const user = new User({
   //   email: req.body.email,
   //   fullName: req.body.fullName,
