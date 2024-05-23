@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const { validationResult } = require('express-validator');
 const { registerValidation } = require('./validations/auth.js');
-const User = require('./models/user.js'); // Импортируем модуль User
+const User = require('./models/user.js'); 
 
 const password = encodeURIComponent('12345');
 const dbURI = `mongodb+srv://voin12k:${password}@cluster0.kbdn813.mongodb.net/mydatabase?retryWrites=true&w=majority&appName=Cluster0`;
