@@ -41,13 +41,23 @@ const skillsSchema = new Schema({
     survival: skillSchema            
 }, { _id: false });
 
+const spellSlotSchema = new Schema({
+    level: { type: Number, required: true },
+    slots: { type: Number, required: true },
+    used: { type: Number, default: 0 }
+}, { _id: false });
+
 const characterSchema = new Schema({
     name: { type: String, required: true },
     account: { type: Schema.Types.ObjectId, ref: 'Account', required: true },
     room: { type: Schema.Types.ObjectId, ref: 'Room', required: true },
     race: { type: String, required: true },
-    class: { type: String },
-    age: { type: Number },
+    class: { type: String, required: true },
+    age: { type: String, required: true },
+    ac: { type: String, required: true },
+    initiative: { type: String, required: true },
+    speed: { type: String, required: true },
+    proficiency: { type: String, required: true },
     playerName: { type: String, required: true },
     mainStats: {
         strength: { type: Number, required: true },
@@ -66,7 +76,8 @@ const characterSchema = new Schema({
         bonusCharisma: { type: Number, required: true }
     },
     savingThrows: { type: savingThrowsSchema, default: () => ({}) },
-    skills: { type: skillsSchema, default: () => ({}) }
+    skills: { type: skillsSchema, default: () => ({}) },
+    spellSlots: { type: [spellSlotSchema], default: [] } 
 });
 
 module.exports = mongoose.model('Character', characterSchema);
