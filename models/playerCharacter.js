@@ -19,10 +19,10 @@ const skillSchema = new Schema({
     proficiency: { type: Boolean, default: false },
     modifier: { type: Number, default: 0 }
 }, { _id: false });
-
-const skillsSchema = new Schema({
-    acrobatics: skillSchema,        
-    animalHandling: skillSchema,    
+ 
+const skillsSchema = new Schema({    
+    acrobatics: skillSchema,         
+    animalHandling: skillSchema,     
     arcana: skillSchema,             
     athletics: skillSchema,          
     deception: skillSchema,          
@@ -32,12 +32,12 @@ const skillsSchema = new Schema({
     investigation: skillSchema,      
     medicine: skillSchema,           
     nature: skillSchema,             
-    perception: skillSchema,        
+    perception: skillSchema,         
     performance: skillSchema,        
     persuasion: skillSchema,         
     religion: skillSchema,           
-    sleightOfHand: skillSchema,    
-    stealth: skillSchema,            
+    sleightOfHand: skillSchema,      
+    stealth: skillSchema,             
     survival: skillSchema            
 }, { _id: false });
 
@@ -47,13 +47,24 @@ const spellSlotSchema = new Schema({
     used: { type: Number, default: 0 }
 }, { _id: false });
 
+const spellSchema = new Schema({
+    name: { type: String, required: true },
+    description: { type: String, required: true },
+    level: { type: Number, required: true }
+}, { _id: false });
+
 const characterSchema = new Schema({
     name: { type: String, required: true },
+    lvl: {type: String, required: true},
+    exp: {type: String, required: true},
     account: { type: Schema.Types.ObjectId, ref: 'Account', required: true },
     room: { type: Schema.Types.ObjectId, ref: 'Room', required: true },
     race: { type: String, required: true },
     class: { type: String, required: true },
     age: { type: String, required: true },
+    hp: {type: String, required: true},
+    hit_dace: {type: String, required: true},
+    max_hp: {type: String, required: true},
     ac: { type: String, required: true },
     initiative: { type: String, required: true },
     speed: { type: String, required: true },
@@ -77,7 +88,8 @@ const characterSchema = new Schema({
     },
     savingThrows: { type: savingThrowsSchema, default: () => ({}) },
     skills: { type: skillsSchema, default: () => ({}) },
-    spellSlots: { type: [spellSlotSchema], default: [] } 
+    spellSlots: { type: [spellSlotSchema], default: [] }, 
+    spells: { type: [spellSchema], default: [] } 
 });
 
 module.exports = mongoose.model('Character', characterSchema);

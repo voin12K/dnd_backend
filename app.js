@@ -121,6 +121,20 @@ app.post('/rooms/join', async (req, res) => {
   }
 });
 
+app.post('/createCharacter', async (req, res) => {
+  
+  
+  try {
+      const characterData = req.body; 
+      const newCharacter = await Character.create(characterData);
+      res.status(201).json(newCharacter);
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+});
+
+
+
 const PORT = process.env.PORT || 4444;
 app.listen(PORT, (err) => {
   if (err) {
