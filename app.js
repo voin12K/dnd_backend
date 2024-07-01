@@ -1,10 +1,11 @@
-const express = require('express');
-const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
-const { validationResult } = require('express-validator');
-const { registerValidation } = require('./validations/auth.js');
-const bcrypt = require('bcrypt');
-const User = require('./models/user.js');
+import express from 'express';
+import cors from 'cors';
+import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
+import { validationResult } from 'express-validator';
+import { registerValidation } from './validations/auth.js';
+import bcrypt from 'bcrypt';
+import User from './models/user.js';
 
 const password = encodeURIComponent('12345');
 const dbURI = `mongodb+srv://voin12k:${password}@cluster0.kbdn813.mongodb.net/mydatabase?retryWrites=true&w=majority&appName=Cluster0`;
@@ -16,6 +17,7 @@ mongoose.connect(dbURI)
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.send('Hello world');
