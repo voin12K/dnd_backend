@@ -1,22 +1,11 @@
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-  fullName: {
-    type: String,
-    required: true
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  passwordHash: {
-    type: String,
-    required: true
-  },
+  email: { type: String, required: true, unique: true },
+  fullName: { type: String, required: true },
   avatarUrl: String,
-}, {
-  timestamps: true 
+  passwordHash: { type: String, required: true },
+  rooms: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Room' }],
 });
 
 const User = mongoose.model('User', userSchema)
