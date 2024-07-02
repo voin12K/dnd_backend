@@ -1,3 +1,4 @@
+
 import express from 'express';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
@@ -130,8 +131,11 @@ app.post('/createCharacter', async (req, res) => {
   try {
     const characterData = req.body;
 
-    if (!characterData.name || !characterData.lvl || !characterData.exp || !characterData.account || !characterData.room || !characterData.race || !characterData.class || !characterData.age || !characterData.hp || !characterData.hit_dice || !characterData.max_hp || !characterData.ac || !characterData.initiative || !characterData.speed || !characterData.proficiency || !characterData.playerName) {
-      return res.status(400).json({ message: 'Все обязательные поля должны быть заполнены' });
+    const requiredFields = ['name', 'lvl', 'exp', 'account', 'room', 'race', 'class', 'age', 'hp', 'hit_dice', 'max_hp', 'ac', 'initiative', 'speed', 'proficiency', 'playerName'];
+    const missingFields = requiredFields.filter(field => !characterData[field]);
+    
+    if (missingFields.length > 0) {
+      return res.status(400).json({ message: 'Все обязательные поля должны быть заполнены', missingFields });
     }
 
     const newCharacter = await Character.create(characterData);

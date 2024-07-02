@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
+
+const { Schema } = mongoose;
 
 const savingThrowSchema = new Schema({
     proficiency: { type: Boolean, default: false },
@@ -92,4 +93,6 @@ const characterSchema = new Schema({
     spells: { type: [spellSchema], default: [] } 
 });
 
-module.exports = mongoose.model('Character', characterSchema);
+const Character = mongoose.model('Character', characterSchema);
+
+export { Character };
