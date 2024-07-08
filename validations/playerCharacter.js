@@ -5,13 +5,6 @@ const numericRange = (min, max) => ({
   toInt: true
 });
 
-const spellLevelValidator = numericRange(0, 9);
-
-const spellSlotValidator = {
-  isInt: { errorMessage: 'Slots must be a non-negative integer', options: { min: 0 } },
-  toInt: true
-};
-
 const characterValidation = [
   body('name')
     .isString().withMessage('Name must be a string')
@@ -24,8 +17,6 @@ const characterValidation = [
     .toInt(),
   body('account')
     .isMongoId().withMessage('Account ID must be a valid Mongo ID'),
-  body('room')
-    .isMongoId().withMessage('Room ID must be a valid Mongo ID'),
   body('race')
     .isString().withMessage('Race must be a string')
     .isLength({ min: 1 }).withMessage('Race cannot be empty'),
