@@ -59,7 +59,6 @@ const characterSchema = new Schema({
     lvl: {type: String, required: true},
     exp: {type: String, required: true},
     account: { type: Schema.Types.ObjectId, ref: 'Account', required: true },
-    room: { type: Schema.Types.ObjectId, ref: 'Room', required: true },
     race: { type: String, required: true },
     class: { type: String, required: true },
     age: { type: String, required: true },
