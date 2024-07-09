@@ -53,6 +53,32 @@ app.post('/auth/register', registerValidation, async (req, res) => {
   }
 });
 
+const checkAuth = (req, res, next) => {
+  const token = req.header('Authorization')?.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ message: 'Нет токена, авторизация отклонена' });
+  }
+  try {
+    const decoded = jwt.verify(token, 'secret123');
+    req.user = decoded;
+    next();
+  } catch (err) {
+    res.status(401).json({ message: 'Токен не валиден' });
+  }
+};
+
+app.get('/auth/me', checkAuth, async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.user.email });
+    if (!user) {
+      return res.status(404).json({ message: 'Пользователь не найден' });
+    }
+    res.json({ user });
+  } catch (err) {
+    res.status(500).json({ message: 'Ошибка сервера', error: err });
+  }
+});
+
 app.post('/auth/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -130,17 +156,20 @@ app.post('/rooms/join', async (req, res) => {
 app.post('/createCharacter', async (req, res) => {
   try {
     const characterData = req.body;
+    console.log('Received character data:', characterData);
 
     const requiredFields = ['name', 'lvl', 'exp', 'account', 'room', 'race', 'class', 'age', 'hp', 'hit_dice', 'max_hp', 'ac', 'initiative', 'speed', 'proficiency', 'playerName'];
     const missingFields = requiredFields.filter(field => !characterData[field]);
     
     if (missingFields.length > 0) {
+      console.log('Missing fields:', missingFields);
       return res.status(400).json({ message: 'Все обязательные поля должны быть заполнены', missingFields });
     }
 
     const newCharacter = await Character.create(characterData);
     res.status(201).json(newCharacter);
   } catch (error) {
+    console.error('Error creating character:', error);
     res.status(500).json({ message: error.message });
   }
 });

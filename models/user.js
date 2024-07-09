@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
   avatarUrl: String,
   passwordHash: { type: String, required: true },
   rooms: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Room' }],
-  characters: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Character' }] // массив ссылок на персонажей
+  characters: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Character' }] 
 });
 
 const User = mongoose.model('User', userSchema);
