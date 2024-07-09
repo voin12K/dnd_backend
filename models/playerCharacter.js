@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
+
+const { Schema } = mongoose;
 
 const savingThrowSchema = new Schema({
     proficiency: { type: Boolean, default: false },
@@ -55,20 +56,19 @@ const spellSchema = new Schema({
 
 const characterSchema = new Schema({
     name: { type: String, required: true },
-    lvl: {type: String, required: true},
-    exp: {type: String, required: true},
-    account: { type: Schema.Types.ObjectId, ref: 'Account', required: true },
-    room: { type: Schema.Types.ObjectId, ref: 'Room', required: true },
+    lvl: { type: Number, required: true },
+    exp: { type: Number, required: true },
+    account: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     race: { type: String, required: true },
     class: { type: String, required: true },
-    age: { type: String, required: true },
-    hp: {type: String, required: true},
-    hit_dace: {type: String, required: true},
-    max_hp: {type: String, required: true},
-    ac: { type: String, required: true },
-    initiative: { type: String, required: true },
-    speed: { type: String, required: true },
-    proficiency: { type: String, required: true },
+    age: { type: Number, required: true },
+    hp: { type: Number, required: true },
+    hit_dice: { type: String, required: true }, 
+    max_hp: { type: Number, required: true },
+    ac: { type: Number, required: true },
+    initiative: { type: Number, required: true },
+    speed: { type: Number, required: true },
+    proficiency: { type: Number, required: true },
     playerName: { type: String, required: true },
     mainStats: {
         strength: { type: Number, required: true },
@@ -92,4 +92,6 @@ const characterSchema = new Schema({
     spells: { type: [spellSchema], default: [] } 
 });
 
-module.exports = mongoose.model('Character', characterSchema);
+const Character = mongoose.model('Character', characterSchema);
+
+export { Character };
