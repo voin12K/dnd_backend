@@ -177,7 +177,6 @@ app.get('/rooms', async (req, res) => {
   }
 });
 
-// Route to get all open rooms
 app.get('/rooms/open', async (req, res) => {
   try {
     const openRooms = await Room.find({ isOpen: true }).populate('users');
