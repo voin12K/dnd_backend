@@ -163,7 +163,7 @@ app.post('/createCharacter', async (req, res) => {
     
     if (missingFields.length > 0) {
       console.log('Missing fields:', missingFields);
-      return res.status(400).json({ message: 'Все обязательные поля должны быть заполнены', missingFields });
+      return res.status(400).json({ message: 'All required fields must be completed', missingFields });
     }
 
     const newCharacter = await Character.create(characterData);
