@@ -1,18 +1,19 @@
 import mongoose from 'mongoose';
 
-const RoomSchema = new mongoose.Schema({
-  code: { type: String, required: true },
-  name: { type: String, required: true },
-  users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  availableRaces: [String],
-  availableClasses: [String],
-  startLevel: Number,
-  startMoney: Number,
-  maxPlayers: Number,
-  language: String,
-  description: String,
-  isOpen: Boolean,
+const roomSchema = new mongoose.Schema({
+    code: { type: String, unique: true, required: true },
+    name: { type: String },
+    users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    availableRaces: [{ type: String }],
+    availableClasses: [{ type: String }],
+    startLevel: { type: Number, default: 1 },
+    startMoney: { type: Number, default: 100 },
+    maxPlayers: { type: Number, default: 4 },
+    language: { type: String, default: "English" },
+    description: { type: String, default: "" },
+    isOpen: { type: Boolean, default: true }
 });
 
-const Room = mongoose.model('Room', RoomSchema);
-export default Room; 
+const Room = mongoose.model('Room', roomSchema);
+
+export default Room;

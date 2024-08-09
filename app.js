@@ -143,28 +143,37 @@ app.post('/rooms/join', async (req, res) => {
   const { code, userId } = req.body;
 
   if (!code || !userId) {
-    return res.status(400).json({ message: 'Room code and user ID are required' });
+      return res.status(400).json({ message: 'Room code and user ID are required' });
   }
 
   try {
-    const room = await Room.findOne({ code });
+      const room = await Room.findOne({ code });
 
-    if (!room) {
-      return res.status(404).json({ message: 'Room not found' });
-    }
+      if (!room) {
+          return res.status(404).json({ message: 'Room not found' });
+      }
 
-    if (!room.isOpen && !room.users.includes(userId)) {
-      return res.status(403).json({ message: 'Cannot join a closed room without an invitation' });
-    }
+      const user = await User.findById(userId);
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
 
-    if (!room.users.includes(userId)) {
-      room.users.push(userId);
-      await room.save();
-    }
+      if (!room.isOpen && !room.users.includes(userId)) {
+          return res.status(403).json({ message: 'Cannot join a closed room without an invitation' });
+      }
 
-    res.json({ success: true, room });
+      if (!room.users.includes(userId)) {
+          room.users.push(userId);
+          await room.save();
+          console.log(`User ${userId} added to room ${code}`);
+      } else {
+          console.log(`User ${userId} already in room ${code}`);
+      }
+
+      res.json({ success: true, room });
   } catch (err) {
-    res.status(500).json({ message: 'Error joining room', error: err });
+      console.error('Error joining room:', err);
+      res.status(500).json({ message: 'Error joining room', error: err });
   }
 });
 
